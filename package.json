@@ -1,0 +1,13 @@
+{
+  "name": "pulse-web",
+  "version": "1.0.0",
+  "description": "Pulse — One button for your AI coding agent",
+  "scripts": {
+    "build": "mkdir -p dist && cp index.html dist/ && cp vercel.json dist/ 2>/dev/null || true",
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": ["pulse", "ai", "mcp", "claude", "button"],
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Pulse — One Button for Your AI Coding Agent</title>
+
+<!-- Open Graph -->
+<meta property="og:title" content="Pulse — One Button for Your AI Coding Agent">
+<meta property="og:description" content="Press to command. Glow to show status. Your AI agent gets smarter every time you press.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="/og-image.png">
+<meta property="og:url" content="https://pulse.dev">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pulse — One Button for Your AI Coding Agent">
+<meta name="twitter:description" content="Press to command. Glow to show status. Your AI agent gets smarter every time you press.">
+<meta name="twitter:image" content="/og-image.png">
+<meta name="description" content="One physical button to control your AI coding agent. Press to command. Glow to show status. Works with Claude Code, Cursor, and any MCP-compatible agent.">
+
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --accent: #C15F3C;
+    --accent-glow: rgba(193, 95, 60, 0.4);
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --border: rgba(255,255,255,0.06);
+    --text-primary: rgba(255,255,255,0.92);
+    --text-secondary: rgba(255,255,255,0.55);
+    --text-tertiary: rgba(255,255,255,0.3);
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #facc15;
+    --blue: #3b82f6;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background: var(--bg);
+  }
+
+  body {
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-primary);
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ===== SECTION 1: LANDING / HERO ===== */
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Ambient background glow */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(193,95,60,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+    margin-bottom: 32px;
+    animation: fadeInUp 0.8s ease both;
+  }
+
+  .hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(34,197,94,0.5);
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-title {
+    font-size: clamp(56px, 10vw, 96px);
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 16px;
+    animation: fadeInUp 0.8s ease 0.1s both;
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(18px, 3vw, 24px);
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 500px;
+    margin-bottom: 12px;
+    font-weight: 400;
+    animation: fadeInUp 0.8s ease 0.2s both;
+  }
+
+  .hero-desc {
+    font-size: clamp(15px, 2vw, 17px);
+    color: var(--text-tertiary);
+    text-align: center;
+    max-width: 520px;
+    margin-bottom: 56px;
+    line-height: 1.7;
+    animation: fadeInUp 0.8s ease 0.3s both;
+  }
+
+  /* Feature cards */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 780px;
+    width: 100%;
+    margin-bottom: 56px;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+
+  @media (max-width: 700px) {
+    .features {
+      grid-template-columns: 1fr;
+      max-width: 400px;
+    }
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .feature-card:hover {
+    border-color: rgba(193,95,60,0.25);
+    box-shadow: 0 8px 40px rgba(193,95,60,0.06);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .feature-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+  }
+
+  /* CTA */
+  .cta-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: fadeInUp 0.8s ease 0.5s both;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(193,95,60,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 40px rgba(193,95,60,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+    background: #d06840;
+  }
+
+  .cta-btn:active {
+    transform: translateY(0);
+  }
+
+  .cta-compat {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.2px;
+  }
+
+  .cta-links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 4px;
+  }
+
+  .gh-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    letter-spacing: 0.2px;
+  }
+
+  .gh-link:hover {
+    border-color: rgba(255,255,255,0.12);
+    color: var(--text-primary);
+    background: var(--surface-2);
+  }
+
+  .gh-link svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .hero-footer {
+    margin-top: 48px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.5px;
+    animation: fadeInUp 0.8s ease 0.6s both;
+    opacity: 0.6;
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: fadeInUp 0.8s ease 0.7s both, float 2.5s ease-in-out infinite;
+  }
+
+  .scroll-hint .arrow {
+    width: 20px;
+    height: 20px;
+    border-right: 1.5px solid var(--text-tertiary);
+    border-bottom: 1.5px solid var(--text-tertiary);
+    transform: rotate(45deg);
+    opacity: 0.5;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ===== SECTION 2: SIMULATOR ===== */
+
+  .simulator-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px 80px;
+    position: relative;
+    border-top: 1px solid var(--border);
+  }
+
+  .simulator-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.015) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .sim-header {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .sim-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .sim-subtitle {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  /* Instructions overlay */
+  .sim-instructions {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin-bottom: 32px;
+    max-width: 440px;
+    width: 100%;
+  }
+
+  .sim-instructions p {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    line-height: 1.8;
+  }
+
+  .sim-instructions span.key {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* Simulator container — scoped styles */
+  .sim-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  /* State selector for simulator */
+  .state-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .state-selector label {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  .state-selector select {
+    background: var(--surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .state-selector select:hover {
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  /* ---------- BUTTON SIMULATOR STYLES ---------- */
+
+  .sim-container {
+    --glow: rgba(255,255,255,0.08);
+    --glow-spread: 0px;
+    --btn-color: rgba(255,255,255,0.06);
+    --ring-color: rgba(255,255,255,0.12);
+    --text-color: rgba(255,255,255,0.35);
+  }
+
+  .btn-wrap {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .led-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--ring-color);
+    box-shadow:
+      0 0 20px var(--glow),
+      0 0 60px var(--glow),
+      inset 0 0 20px var(--glow);
+    transition: border-color 0.6s ease, box-shadow 0.6s ease;
+    pointer-events: none;
+  }
+
+  .pulse-btn {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: var(--btn-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), background 0.6s ease, box-shadow 0.6s ease;
+    box-shadow: 0 0 var(--glow-spread) var(--glow);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+  }
+
+  .pulse-btn:active, .pulse-btn.pressed {
+    transform: scale(0.92);
+    transition: transform 0.08s ease-out;
+  }
+
+  .pulse-btn .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ring-color);
+    transition: background 0.6s ease;
+  }
+
+  .pulse-btn .btn-label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-color);
+    transition: color 0.6s ease;
+  }
+
+  /* State themes for simulator */
+  .sim-container.state-idle {
+    --glow: rgba(255,255,255,0.04);
+    --glow-spread: 0px;
+    --btn-color: rgba(255,255,255,0.04);
+    --ring-color: rgba(255,255,255,0.08);
+    --text-color: rgba(255,255,255,0.3);
+  }
+
+  .sim-container.state-working {
+    --glow: rgba(239,68,68,0.35);
+    --glow-spread: 30px;
+    --btn-color: rgba(239,68,68,0.08);
+    --ring-color: rgba(239,68,68,0.5);
+    --text-color: rgba(239,68,68,0.9);
+  }
+
+  .sim-container.state-done {
+    --glow: rgba(34,197,94,0.35);
+    --glow-spread: 30px;
+    --btn-color: rgba(34,197,94,0.08);
+    --ring-color: rgba(34,197,94,0.5);
+    --text-color: rgba(34,197,94,0.9);
+  }
+
+  .sim-container.state-needs_input {
+    --glow: rgba(250,204,21,0.35);
+    --glow-spread: 30px;
+    --btn-color: rgba(250,204,21,0.06);
+    --ring-color: rgba(250,204,21,0.5);
+    --text-color: rgba(250,204,21,0.9);
+  }
+
+  .sim-container.state-listening {
+    --glow: rgba(59,130,246,0.45);
+    --glow-spread: 40px;
+    --btn-color: rgba(59,130,246,0.1);
+    --ring-color: rgba(59,130,246,0.6);
+    --text-color: rgba(59,130,246,0.95);
+  }
+
+  .sim-container.state-error {
+    --glow: rgba(239,68,68,0.5);
+    --glow-spread: 30px;
+    --btn-color: rgba(239,68,68,0.1);
+    --ring-color: rgba(239,68,68,0.6);
+    --text-color: rgba(239,68,68,1);
+  }
+
+  /* Pulse animation for needs_input */
+  .sim-container.state-needs_input .led-ring {
+    animation: pulse-ring 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%, 100% { box-shadow: 0 0 20px rgba(250,204,21,0.2), 0 0 60px rgba(250,204,21,0.1), inset 0 0 20px rgba(250,204,21,0.1); }
+    50% { box-shadow: 0 0 30px rgba(250,204,21,0.5), 0 0 80px rgba(250,204,21,0.25), inset 0 0 30px rgba(250,204,21,0.2); }
+  }
+
+  /* Error blink */
+  .sim-container.state-error .led-ring {
+    animation: blink-ring 0.45s ease-in-out infinite;
+  }
+
+  @keyframes blink-ring {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* Toast */
+  .sim-toast {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    white-space: nowrap;
+    z-index: 20;
+  }
+
+  .sim-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Log */
+  .sim-log {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-height: 60px;
+    margin-top: 16px;
+  }
+
+  .sim-log .entry {
+    font-size: 11px;
+    color: rgba(255,255,255,0.18);
+    letter-spacing: 0.4px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* ===== ANIMATIONS ===== */
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== SECTION 1: HERO / LANDING ===== -->
+  <section class="hero" id="hero">
+
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Open Source
+    </div>
+
+    <h1 class="hero-title"><span>Pulse</span></h1>
+    <p class="hero-subtitle">One button for your AI coding agent</p>
+    <p class="hero-desc">Press to command. Glow to show status. Your AI agent gets smarter every time you press.</p>
+
+    <div class="features">
+      <div class="feature-card">
+        <span class="feature-icon" aria-hidden="true">&#x1F534;&#x2192;&#x1F7E2;</span>
+        <div class="feature-title">Status at a glance</div>
+        <p class="feature-desc">Red = working. Green = done. Never check your terminal again.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon" aria-hidden="true">&#x1F446;</span>
+        <div class="feature-title">Tap to command</div>
+        <p class="feature-desc">1 tap approve. 2 taps reject. 3 taps security scan.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon" aria-hidden="true">&#x1F9E0;</span>
+        <div class="feature-title">Agent learns</div>
+        <p class="feature-desc">Every press teaches your agent. It gets smarter over time.</p>
+      </div>
+    </div>
+
+    <div class="cta-area">
+      <a href="#simulator" class="cta-btn">Try it now &rarr;</a>
+      <span class="cta-compat">Works with Claude Code &bull; Cursor &bull; Any MCP-compatible agent</span>
+      <div class="cta-links">
+        <a href="https://github.com/nickarises/pulse" target="_blank" rel="noopener" class="gh-link">
+          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+      <span class="hero-footer">Made for developers who code with AI</span>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="arrow"></div>
+    </div>
+
+  </section>
+
+  <!-- ===== SECTION 2: SIMULATOR ===== -->
+  <section class="simulator-section" id="simulator">
+
+    <div class="sim-header">
+      <div class="sim-title">Live Demo</div>
+      <p class="sim-subtitle">Try the button right here. No hardware needed.</p>
+    </div>
+
+    <div class="sim-instructions">
+      <p>
+        <span class="key">Tap</span> the button to approve &bull;
+        <span class="key">Double-tap</span> to reject &bull;
+        <span class="key">Hold 2s</span> to explain &bull;
+        Use the <span class="key">state selector</span> to test colors
+      </p>
+    </div>
+
+    <div class="sim-container state-idle" id="sim-container">
+      <div class="sim-toast" id="sim-toast"></div>
+      <div class="btn-wrap">
+        <div class="led-ring"></div>
+        <button class="pulse-btn" id="pulse-btn">
+          <div class="icon"></div>
+          <span class="btn-label">Idle</span>
+        </button>
+      </div>
+      <div class="sim-log" id="sim-log"></div>
+    </div>
+
+    <div class="state-selector">
+      <label for="state-select">State</label>
+      <select id="state-select">
+        <option value="idle">Idle</option>
+        <option value="working">Working</option>
+        <option value="done">Done</option>
+        <option value="needs_input">Needs Input</option>
+        <option value="error">Error</option>
+      </select>
+    </div>
+
+  </section>
+
+<script>
+(() => {
+  "use strict";
+
+  /* ===== Scroll-triggered card animations ===== */
+  const cards = document.querySelectorAll('.feature-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 120);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  cards.forEach(c => observer.observe(c));
+
+  /* ===== Simulator logic ===== */
+  const container = document.getElementById("sim-container");
+  const btn       = document.getElementById("pulse-btn");
+  const btnLabel  = btn.querySelector(".btn-label");
+  const toast     = document.getElementById("sim-toast");
+  const logEl     = document.getElementById("sim-log");
+  const stateSel  = document.getElementById("state-select");
+
+  const STATE_META = {
+    idle:        { text: "Idle" },
+    working:     { text: "Working\u2026" },
+    done:        { text: "Done" },
+    needs_input: { text: "Needs Input" },
+    listening:   { text: "Listening\u2026" },
+    error:       { text: "Error" },
+  };
+
+  let currentState = "idle";
+
+  function setState(s) {
+    if (!STATE_META[s]) return;
+    currentState = s;
+    container.className = "sim-container state-" + s;
+    btnLabel.textContent = STATE_META[s].text;
+    // sync select if not user-driven
+    if (stateSel.value !== s && STATE_META[s] && s !== "listening") {
+      stateSel.value = s;
+    }
+  }
+
+  /* Toast */
+  let toastTimer = 0;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+  }
+
+  /* Action log */
+  const logEntries = [];
+  function logAction(action) {
+    const now = new Date();
+    const ts = now.toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    logEntries.push({ ts, action });
+    if (logEntries.length > 5) logEntries.shift();
+    logEl.innerHTML = logEntries.map(e =>
+      '<div class="entry">' + e.ts + ' &middot; ' + e.action + '</div>'
+    ).join("");
+  }
+
+  /* Gesture detection */
+  let tapCount   = 0;
+  let tapTimer   = 0;
+  let pressTimer = 0;
+  let longFired  = false;
+  let pressStart = 0;
+
+  const TAP_WINDOW = 380;
+  const LONG_MS    = 2000;
+
+  function vibrate(ms) {
+    if (navigator.vibrate) navigator.vibrate(ms);
+  }
+
+  function fireAction(action, friendlyName) {
+    showToast(friendlyName);
+    logAction(action);
+    vibrate(30);
+  }
+
+  function resolveTaps() {
+    if (tapCount === 1) fireAction("approve", "Approve");
+    else if (tapCount === 2) fireAction("reject_learn", "Reject & Learn");
+    else if (tapCount >= 3) fireAction("security_scan", "Security Scan");
+    tapCount = 0;
+  }
+
+  function onPointerDown(e) {
+    e.preventDefault();
+    btn.classList.add("pressed");
+    longFired = false;
+    pressStart = Date.now();
+
+    pressTimer = setTimeout(() => {
+      longFired = true;
+      setState("listening");
+      fireAction("explain", "Explain");
+      vibrate(80);
+    }, LONG_MS);
+  }
+
+  function onPointerUp(e) {
+    e.preventDefault();
+    btn.classList.remove("pressed");
+    clearTimeout(pressTimer);
+
+    if (longFired) return;
+
+    const elapsed = Date.now() - pressStart;
+    if (elapsed >= LONG_MS) return;
+
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(resolveTaps, TAP_WINDOW);
+    vibrate(15);
+  }
+
+  function onPointerCancel() {
+    btn.classList.remove("pressed");
+    clearTimeout(pressTimer);
+  }
+
+  btn.addEventListener("pointerdown", onPointerDown);
+  btn.addEventListener("pointerup", onPointerUp);
+  btn.addEventListener("pointercancel", onPointerCancel);
+  btn.addEventListener("pointerleave", onPointerCancel);
+  btn.addEventListener("contextmenu", e => e.preventDefault());
+
+  /* State selector */
+  stateSel.addEventListener("change", () => {
+    const v = stateSel.value;
+    if (v) setState(v);
+  });
+
+  /* Init */
+  setState("idle");
+})();
+</script>
+</body>
+</html>

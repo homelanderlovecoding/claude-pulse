@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEX Landscape Report — Solana &amp; EVM (April 2026)</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --bg2: #16213e;
+    --bg3: #0f3460;
+    --text: #e0e0e0;
+    --text-dim: #a0a0b8;
+    --accent: #e94560;
+    --accent2: #53a8b6;
+    --border: #2a2a4a;
+    --table-head: #0f3460;
+    --table-alt: #1a1a3a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Georgia", "Times New Roman", "Palatino Linotype", serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 32px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  header .subtitle {
+    font-size: 1rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  header .date {
+    font-size: 0.9rem;
+    color: var(--accent2);
+    margin-top: 6px;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 32px;
+    margin-bottom: 48px;
+  }
+  .toc h2 {
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .toc ol {
+    padding-left: 20px;
+  }
+  .toc li {
+    margin-bottom: 4px;
+  }
+  .toc a {
+    color: var(--accent2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: #fff; }
+  .toc ol ol {
+    margin-top: 4px;
+    padding-left: 18px;
+    font-size: 0.93em;
+  }
+
+  /* SECTIONS */
+  .part-header {
+    background: var(--bg3);
+    border-left: 4px solid var(--accent);
+    padding: 16px 24px;
+    margin: 48px 0 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .part-header h2 {
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    color: var(--accent2);
+    margin: 32px 0 12px 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+  }
+
+  h4 {
+    font-size: 1rem;
+    color: #ccc;
+    margin: 20px 0 8px 0;
+  }
+
+  p { margin-bottom: 12px; }
+
+  strong { color: #fff; }
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 28px 0;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  th {
+    background: var(--table-head);
+    color: #fff;
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent);
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: var(--table-alt);
+  }
+
+  /* LISTS */
+  ul, ol { padding-left: 22px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+
+  /* FOOTER */
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  /* PRINT */
+  @media print {
+    :root {
+      --bg: #fff;
+      --bg2: #f5f5f5;
+      --bg3: #eee;
+      --text: #222;
+      --text-dim: #666;
+      --accent: #c0392b;
+      --accent2: #2980b9;
+      --border: #ccc;
+      --table-head: #ddd;
+      --table-alt: #f9f9f9;
+    }
+    body {
+      background: #fff;
+      color: #222;
+      font-size: 11pt;
+    }
+    .container {
+      max-width: 100%;
+      padding: 0;
+    }
+    @page {
+      size: A4;
+      margin: 20mm 18mm;
+    }
+    header h1 { color: #222; }
+    strong { color: #000; }
+    th { color: #000; }
+    .part-header { break-after: avoid; }
+    h3 { break-after: avoid; }
+    table { break-inside: avoid; }
+    .toc { break-after: page; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<header>
+  <h1>DEX Landscape Report — Solana &amp; EVM</h1>
+  <div class="subtitle">A comprehensive survey of decentralized exchange architectures, mechanisms, and innovations</div>
+  <div class="date">April 16, 2026</div>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#part1">Part 1: Solana DEX Ecosystem</a>
+      <ol>
+        <li><a href="#s1-amm">AMM &mdash; Constant Product</a></li>
+        <li><a href="#s1-clamm">Concentrated Liquidity AMMs</a></li>
+        <li><a href="#s1-dlmm">DLMM &mdash; Dynamic Liquidity Market Maker</a></li>
+        <li><a href="#s1-clob">CLOB &mdash; Central Limit Order Book</a></li>
+        <li><a href="#s1-agg">Aggregators</a></li>
+        <li><a href="#s1-perp">Perpetual / Derivatives DEXes</a></li>
+        <li><a href="#s1-pmm">Proactive / Algorithmic Market Makers</a></li>
+        <li><a href="#s1-rfq">RFQ / Intent-Based</a></li>
+        <li><a href="#s1-special">Specialized / Niche DEXes</a></li>
+        <li><a href="#s1-summary">Solana Summary Table</a></li>
+      </ol>
+    </li>
+    <li><a href="#part2">Part 2: EVM DEX Ecosystem</a>
+      <ol>
+        <li><a href="#s2-v2">AMM v2 &mdash; Constant Product</a></li>
+        <li><a href="#s2-v3">AMM v3 &mdash; Concentrated Liquidity</a></li>
+        <li><a href="#s2-weighted">Weighted Pools (Balancer Style)</a></li>
+        <li><a href="#s2-stable">Stable Swaps (Curve Style)</a></li>
+        <li><a href="#s2-clob">CLOB &mdash; On-Chain Order Book</a></li>
+        <li><a href="#s2-hybrid">Hybrid (AMM + Order Book)</a></li>
+        <li><a href="#s2-agg">Aggregators</a></li>
+        <li><a href="#s2-perp">Perpetual DEXes</a></li>
+        <li><a href="#s2-rfq">RFQ / Intent-Based / Solver Networks</a></li>
+        <li><a href="#s2-ve33">ve(3,3) / Solidly Forks</a></li>
+        <li><a href="#s2-emerging">Emerging Categories 2025&ndash;2026</a></li>
+        <li><a href="#s2-summary">EVM Summary Table</a></li>
+      </ol>
+    </li>
+    <li><a href="#part3">Part 3: DEX Innovations &amp; New Mechanisms 2026</a>
+      <ol>
+        <li><a href="#s3-intent">Intent-Based Trading</a></li>
+        <li><a href="#s3-hooks">Uniswap V4 Hooks</a></li>
+        <li><a href="#s3-cl">New Concentrated Liquidity Approaches</a></li>
+        <li><a href="#s3-mev">MEV-Protected DEXes</a></li>
+        <li><a href="#s3-cross">Cross-Chain DEXes</a></li>
+        <li><a href="#s3-ai">AI-Powered DEXes &amp; Market Makers</a></li>
+        <li><a href="#s3-trends">Additional 2026 Trends</a></li>
+      </ol>
+    </li>
+    <li><a href="#part4">Part 4: Comparison Tables</a>
+      <ol>
+        <li><a href="#s4-arch">Architecture Comparison: AMM vs CLOB vs DLMM vs Intent-Based</a></li>
+        <li><a href="#s4-lp">LP Returns by DEX Type</a></li>
+        <li><a href="#s4-cap">Capital Efficiency Ranking</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<!-- PART 1: SOLANA -->
+<!-- ============================================================ -->
+<div class="part-header" id="part1">
+  <h2>Part 1: Solana DEX Ecosystem</h2>
+</div>
+
+<h3 id="s1-amm">1.1 AMM &mdash; Constant Product (x &middot; y = k)</h3>
+
+<table>
+  <tr><th>Protocol</th><th>TVL (Approx.)</th><th>Mechanism</th><th>Token</th></tr>
+  <tr>
+    <td><strong>Raydium</strong></td>
+    <td>$500M&ndash;$1B+</td>
+    <td>Standard x*y=k pools (v1); v3 adds concentrated liquidity. Integrates with Serum/OpenBook order book so AMM liquidity is accessible on the CLOB. AcceleRaytor launchpad.</td>
+    <td>RAY</td>
+  </tr>
+  <tr>
+    <td><strong>Orca (Legacy)</strong></td>
+    <td>$200M&ndash;$500M+</td>
+    <td>Constant-product token-pair pools. Largely transitioned to concentrated liquidity (Whirlpools).</td>
+    <td>ORCA</td>
+  </tr>
+  <tr>
+    <td><strong>Saber</strong></td>
+    <td>Declined from $1B+ peak</td>
+    <td>Curve-like StableSwap invariant optimized for pegged assets (e.g., USDC-USDT). Lower slippage for like-kind swaps.</td>
+    <td>SBR</td>
+  </tr>
+  <tr>
+    <td><strong>Mercurial / Meteora (Stable Pools)</strong></td>
+    <td>&mdash;</td>
+    <td>Stable swap pools for pegged assets; dynamic vaults optimize yield across lending protocols. Evolved into Meteora.</td>
+    <td>MER (legacy)</td>
+  </tr>
+</table>
+
+<h3 id="s1-clamm">1.2 Concentrated Liquidity AMMs (CLAMM)</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Mechanism</th><th>Unique Features</th><th>Token</th></tr>
+  <tr>
+    <td><strong>Orca Whirlpools</strong></td>
+    <td>Tick-based concentrated liquidity (Uniswap V3 concept). LPs provide liquidity in specific price ranges.</td>
+    <td>Clean UX, open-source SDK, fair fee tiers, widely integrated across Solana DeFi.</td>
+    <td>ORCA</td>
+  </tr>
+  <tr>
+    <td><strong>Raydium CLMM (v3)</strong></td>
+    <td>Tick-based concentrated liquidity. LPs set price bounds.</td>
+    <td>Dual model with legacy constant-product pools. Deep memecoin liquidity.</td>
+    <td>RAY</td>
+  </tr>
+  <tr>
+    <td><strong>Crema Finance</strong></td>
+    <td>Concentrated liquidity with customizable price ranges.</td>
+    <td>Focused on capital efficiency for Solana-native pairs.</td>
+    <td>CRM</td>
+  </tr>
+</table>
+
+<h3 id="s1-dlmm">1.3 DLMM &mdash; Dynamic Liquidity Market Maker</h3>
+
+<h4>Meteora DLMM</h4>
+<p>
+  Meteora uses discrete <strong>"bins"</strong> rather than continuous curves. Each bin represents a specific price point, and liquidity is distributed across bins. Only the active bin earns fees. LPs choose custom bin distributions (uniform, curve, bid-ask shapes).
+</p>
+<p>
+  <strong>Key advantages:</strong> Zero-slippage within a single bin; highly flexible LP strategies; dynamic fees adjusting from 0.01% (stable) to 2% (high volatility). Became the primary venue for new token launches and memecoin trading. Dual yield generation through lending idle capital to external protocols (Kamino, Marginfi, Solend).
+</p>
+<p><strong>Typical DLMM APY:</strong> 20&ndash;100%+ (requires active management). <strong>Token:</strong> MET (anticipated).</p>
+
+<h3 id="s1-clob">1.4 CLOB &mdash; Central Limit Order Book</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Mechanism</th><th>Unique Features</th><th>Token</th></tr>
+  <tr>
+    <td><strong>OpenBook</strong></td>
+    <td>Fully on-chain limit order book (successor to Serum). Crank mechanism processes and settles matched orders.</td>
+    <td>Community-governed fork after FTX collapse. Foundational CLOB infrastructure for Solana DeFi.</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><strong>Phoenix</strong></td>
+    <td>Next-gen on-chain order book with atomic settlement (no crank needed). Optimized for low-latency matching.</td>
+    <td>Designed to attract traditional market makers. Gaining traction as standard CLOB replacement.</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><strong>GooseFX</strong></td>
+    <td>On-chain order book for spot and perpetual futures.</td>
+    <td>Single-pool SSL (Smart Swap Liquidity) model, combined spot + perps platform.</td>
+    <td>GOFX</td>
+  </tr>
+</table>
+
+<h3 id="s1-agg">1.5 Aggregators</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Volume/Status</th><th>Unique Features</th><th>Token</th></tr>
+  <tr>
+    <td><strong>Jupiter</strong></td>
+    <td>Largest Solana aggregator; often #1 DEX by volume across all chains. Billions in weekly volume.</td>
+    <td>Multi-hop/split routing across all Solana DEXes. Limit orders, DCA, perps, LFG Launchpad. De facto "frontend of Solana DeFi."</td>
+    <td>JUP</td>
+  </tr>
+  <tr>
+    <td><strong>Prism</strong></td>
+    <td>Alternative aggregation frontend</td>
+    <td>Focused on Solana-native liquidity aggregation.</td>
+    <td>PRISM</td>
+  </tr>
+  <tr>
+    <td><strong>Dexlab</strong></td>
+    <td>Aggregator + Launchpad</td>
+    <td>Mintinglab (SPL token creation), order book interface built on Serum/OpenBook markets.</td>
+    <td>DXL</td>
+  </tr>
+</table>
+
+<h3 id="s1-perp">1.6 Perpetual / Derivatives DEXes</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Type / Mechanism</th><th>Unique Features</th><th>Token</th></tr>
+  <tr>
+    <td><strong>Jupiter Perps</strong></td>
+    <td>Oracle-based perpetuals (GMX model). JLP pool as counterparty, Pyth oracle prices. Up to 100x leverage.</td>
+    <td>Deep integration with Jupiter swap aggregator.</td>
+    <td>JUP</td>
+  </tr>
+  <tr>
+    <td><strong>Drift Protocol</strong></td>
+    <td>Hybrid: vAMM backstop + decentralized order book (DLOB) + JIT (just-in-time) liquidity auctions.</td>
+    <td>Spot + perps + borrow-lend + prediction markets (BET). Cross-margining.</td>
+    <td>DRIFT</td>
+  </tr>
+  <tr>
+    <td><strong>Mango Markets (v4)</strong></td>
+    <td>On-chain order book (Serum-based) with cross-margined perps and spot lending.</td>
+    <td>Full cross-margin trading platform. Relaunched as v4 after exploit.</td>
+    <td>MNGO</td>
+  </tr>
+  <tr>
+    <td><strong>Zeta Markets</strong></td>
+    <td>On-chain order book for perpetual futures + options.</td>
+    <td>Options trading (unique on Solana), cross-margin, fast matching engine.</td>
+    <td>ZEX</td>
+  </tr>
+  <tr>
+    <td><strong>Flash Trade</strong></td>
+    <td>Oracle-based pool model (GMX-style).</td>
+    <td>NFT-based position management, gamified trading.</td>
+    <td>&mdash;</td>
+  </tr>
+  <tr>
+    <td><strong>Parcl</strong></td>
+    <td>Perpetual futures on real-world city real estate price indices.</td>
+    <td>Unique niche: trade real estate price movements on-chain.</td>
+    <td>PRCL</td>
+  </tr>
+  <tr>
+    <td><strong>Hxro Network</strong></td>
+    <td>On-chain derivatives infrastructure (parimutuel + order book).</td>
+    <td>Protocol layer that other protocols build on top of.</td>
+    <td>HXRO</td>
+  </tr>
+</table>
+
+<h3 id="s1-pmm">1.7 Proactive / Algorithmic Market Makers</h3>
+
+<h4>Lifinity</h4>
+<p>
+  <strong>Type:</strong> Proactive Market Maker (PMM) / Oracle-based AMM. Uses Pyth oracle prices to concentrate liquidity around the true market price rather than relying on arbitrageurs. The protocol rebalances its own positions proactively.
+</p>
+<p>
+  <strong>Unique features:</strong> Protocol-owned liquidity model &mdash; accumulates value for the protocol rather than relying on external LPs. Extremely capital-efficient. Delayed arbitrage model reduces LVR (loss-versus-rebalancing). <strong>Token:</strong> LFNTY.
+</p>
+
+<h3 id="s1-rfq">1.8 RFQ / Intent-Based</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Mechanism</th><th>Unique Features</th><th>Token</th></tr>
+  <tr>
+    <td><strong>DFlow</strong></td>
+    <td>RFQ / Order flow auction. Market makers compete in real-time auctions to fill retail order flow.</td>
+    <td>Captures MEV for users. Transparent on-chain PFOF model.</td>
+    <td>Anticipated</td>
+  </tr>
+  <tr>
+    <td><strong>Hashflow</strong></td>
+    <td>RFQ-based. Traders request quotes from professional market makers who provide signed quotes.</td>
+    <td>Zero-slippage quotes, MEV-protected, cross-chain capable.</td>
+    <td>HFT</td>
+  </tr>
+</table>
+<p>The broader Solana ecosystem in 2025&ndash;2026 saw growing adoption of <strong>intent-based architectures</strong>, where users express desired outcomes and solvers/fillers compete to execute optimally. Jupiter's routing increasingly incorporates these patterns.</p>
+
+<h3 id="s1-special">1.9 Specialized / Niche DEXes</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Type</th><th>Mechanism / Notes</th></tr>
+  <tr>
+    <td><strong>Pump.fun / PumpSwap</strong></td>
+    <td>Bonding-curve launchpad + AMM</td>
+    <td>Tokens launch on bonding curve; liquidity auto-migrates to Raydium/Meteora DLMM. Launched its own AMM (PumpSwap) in early 2025 to retain liquidity in-house. Dominant memecoin launchpad.</td>
+  </tr>
+  <tr>
+    <td><strong>Saros Finance</strong></td>
+    <td>Multi-function DEX</td>
+    <td>AMM + farm + staking. Token: SAROS.</td>
+  </tr>
+  <tr>
+    <td><strong>Aldrin</strong></td>
+    <td>AMM + Order Book</td>
+    <td>Combined AMM pools with Serum order book interface. Token: RIN.</td>
+  </tr>
+</table>
+
+<h3 id="s1-summary">1.10 Solana DEX Summary by Category</h3>
+
+<table>
+  <tr><th>Category</th><th>Protocols</th></tr>
+  <tr><td>Constant Product AMM</td><td>Raydium (v1), Orca (legacy)</td></tr>
+  <tr><td>Stable AMM</td><td>Saber, Mercurial</td></tr>
+  <tr><td>Concentrated Liquidity</td><td>Orca Whirlpools, Raydium CLMM, Crema, Invariant</td></tr>
+  <tr><td>DLMM</td><td>Meteora</td></tr>
+  <tr><td>CLOB</td><td>OpenBook, Phoenix, GooseFX</td></tr>
+  <tr><td>Proactive / Oracle MM</td><td>Lifinity</td></tr>
+  <tr><td>Aggregator</td><td>Jupiter, Prism, Dexlab</td></tr>
+  <tr><td>Perps</td><td>Jupiter Perps, Drift, Mango v4, Zeta, Flash Trade, Parcl</td></tr>
+  <tr><td>RFQ / Intent</td><td>DFlow, Hashflow</td></tr>
+  <tr><td>Launchpad-DEX</td><td>Pump.fun / PumpSwap</td></tr>
+  <tr><td>Derivatives Infra</td><td>Hxro</td></tr>
+</table>
+
+<p><strong>Key Solana Trends (2025&ndash;2026):</strong></p>
+<ul>
+  <li><strong>DLMM dominance:</strong> Meteora's bin-based model became extremely popular for new token launches and volatile pairs.</li>
+  <li><strong>Aggregator as super-app:</strong> Jupiter expanded beyond aggregation into perps, launchpads, and governance.</li>
+  <li><strong>Intent/solver models:</strong> Growing adoption of RFQ and intent-based execution for better pricing.</li>
+  <li><strong>PumpSwap:</strong> Pump.fun vertically integrating its own AMM to capture memecoin trading value chain.</li>
+  <li><strong>Phoenix CLOB:</strong> Gaining traction as next-gen order book, potentially replacing OpenBook.</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- PART 2: EVM -->
+<!-- ============================================================ -->
+<div class="part-header" id="part2">
+  <h2>Part 2: EVM DEX Ecosystem</h2>
+</div>
+
+<h3 id="s2-v2">2.1 AMM v2 &mdash; Constant Product (x &middot; y = k)</h3>
+
+<p>The original AMM model. Liquidity spread uniformly across the entire price curve from 0 to infinity. Simple but capital-inefficient.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>TVL (Approx.)</th><th>Token</th><th>Unique Features</th></tr>
+  <tr><td><strong>Uniswap V2</strong></td><td>Ethereum, Arbitrum, Polygon, others</td><td>~$1.5B+ (legacy)</td><td>UNI</td><td>The original; massive fork ecosystem</td></tr>
+  <tr><td><strong>SushiSwap (v1)</strong></td><td>Ethereum, Arbitrum, Polygon, BSC, many others</td><td>~$300M+</td><td>SUSHI</td><td>Community fork; Onsen farms, BentoBox vault</td></tr>
+  <tr><td><strong>PancakeSwap V2</strong></td><td>BSC, Ethereum, Arbitrum, Base, zkSync</td><td>~$1.5B+</td><td>CAKE</td><td>Dominant BSC DEX; lottery, prediction markets, NFTs</td></tr>
+  <tr><td><strong>QuickSwap (v2)</strong></td><td>Polygon</td><td>~$100M+</td><td>QUICK</td><td>Leading Polygon-native v2 DEX</td></tr>
+  <tr><td><strong>TraderJoe (v1)</strong></td><td>Avalanche, Arbitrum</td><td>~$100M+</td><td>JOE</td><td>Originally Avalanche-native, expanded to Arbitrum</td></tr>
+  <tr><td><strong>Camelot (v2)</strong></td><td>Arbitrum</td><td>~$50M+</td><td>GRAIL</td><td>Arbitrum-native; custom fee structures, launchpad</td></tr>
+  <tr><td><strong>Fraxswap</strong></td><td>Ethereum, several L2s</td><td>Modest</td><td>FXS</td><td>TWAMM (time-weighted AMM) for large orders</td></tr>
+</table>
+
+<h3 id="s2-v3">2.2 AMM v3 &mdash; Concentrated Liquidity</h3>
+
+<p>LPs allocate capital within specific price ranges, improving capital efficiency 100&ndash;4000x vs v2. Positions represented as NFTs.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>TVL (Approx.)</th><th>Token</th><th>Unique Features</th></tr>
+  <tr><td><strong>Uniswap V3</strong></td><td>Ethereum, Arbitrum, Polygon, Optimism, Base, BSC, Celo, Avalanche</td><td>~$3&ndash;4B+</td><td>UNI</td><td>Invented concentrated liquidity</td></tr>
+  <tr><td><strong>Uniswap V4</strong></td><td>Ethereum, Arbitrum, Base, others (2025&ndash;2026 rollout)</td><td>Growing</td><td>UNI</td><td>Hooks system, singleton contract, flash accounting</td></tr>
+  <tr><td><strong>PancakeSwap V3</strong></td><td>BSC, Ethereum, Arbitrum, Base, zkSync</td><td>~$1B+</td><td>CAKE</td><td>Concentrated liquidity on BSC ecosystem</td></tr>
+  <tr><td><strong>TraderJoe V2/V2.1</strong></td><td>Avalanche, Arbitrum, BSC</td><td>~$100M+</td><td>JOE</td><td>"Liquidity Book" with discrete bins; zero-slippage within bins</td></tr>
+  <tr><td><strong>Maverick Protocol</strong></td><td>Ethereum, zkSync, BSC, Base</td><td>~$30M+</td><td>MAV</td><td>Directional liquidity positioning; LPs follow price automatically</td></tr>
+  <tr><td><strong>Ambient Finance</strong></td><td>Ethereum, Scroll, Blast</td><td>Growing</td><td>&mdash;</td><td>Single-contract; ambient + concentrated + knockout liquidity in one pool</td></tr>
+</table>
+
+<h3 id="s2-weighted">2.3 Weighted Pools (Balancer Style)</h3>
+
+<p>Generalized AMMs allowing pools with 2+ tokens and custom weights (e.g., 80/20) using the weighted constant product formula.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>TVL (Approx.)</th><th>Token</th><th>Unique Features</th></tr>
+  <tr><td><strong>Balancer V2</strong></td><td>Ethereum, Arbitrum, Polygon, Optimism, Base, Gnosis, Avalanche</td><td>~$800M&ndash;1B+</td><td>BAL</td><td>Weighted, stable, and boosted pools; vault architecture</td></tr>
+  <tr><td><strong>Balancer V3</strong></td><td>Ethereum, Gnosis, others (2025&ndash;2026)</td><td>Growing</td><td>BAL</td><td>"Hooks" (Uni V4 inspired), 100% boosted pools</td></tr>
+  <tr><td><strong>Beethoven X</strong></td><td>Optimism, Fantom</td><td>~$50M+</td><td>BEETS</td><td>Balancer-friendly fork; leading weighted pool DEX on OP/FTM</td></tr>
+</table>
+
+<h3 id="s2-stable">2.4 Stable Swaps (Curve Style)</h3>
+
+<p>Optimized for assets trading near 1:1. Hybrid StableSwap invariant is flat near parity and curves like x*y=k at extremes. The amplification coefficient "A" controls flatness.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>TVL (Approx.)</th><th>Token</th><th>Unique Features</th></tr>
+  <tr><td><strong>Curve Finance</strong></td><td>Ethereum, Arbitrum, Optimism, Polygon, Base, BSC, Fantom, many others</td><td>~$1.5&ndash;2B+</td><td>CRV</td><td>Invented StableSwap; ve-tokenomics (veCRV), gauge voting, "Curve Wars"</td></tr>
+  <tr><td><strong>Curve V2 (Cryptoswap)</strong></td><td>Same as above</td><td>Included above</td><td>CRV</td><td>Extension to volatile pairs via internal oracle + dynamic peg; "tricrypto" pools</td></tr>
+  <tr><td><strong>DODO</strong></td><td>Ethereum, BSC, Arbitrum, Polygon</td><td>~$100M+</td><td>DODO</td><td>PMM (Proactive Market Maker) &mdash; oracle-guided for near-zero slippage</td></tr>
+</table>
+
+<h3 id="s2-clob">2.5 CLOB &mdash; On-Chain Order Book</h3>
+
+<p>Traditional order book on-chain. Historically gas-prohibitive on Ethereum L1 but viable on L2s.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>Volume</th><th>Token</th><th>Unique Features</th></tr>
+  <tr><td><strong>dYdX V3</strong></td><td>StarkEx (Ethereum L2)</td><td>~$500M+ daily</td><td>DYDX</td><td>Perps order book on StarkEx; migrated to Cosmos</td></tr>
+  <tr><td><strong>Vertex Protocol</strong></td><td>Arbitrum, Mantle, Base, Sei</td><td>~$1&ndash;2B+ daily</td><td>VRTX</td><td>Hybrid CLOB + AMM; cross-margin; fast sequencer</td></tr>
+  <tr><td><strong>Clober</strong></td><td>Arbitrum, Base</td><td>Smaller</td><td>&mdash;</td><td>Fully on-chain CLOB for spot; segment-tree for gas efficiency</td></tr>
+</table>
+
+<h3 id="s2-hybrid">2.6 Hybrid (AMM + Order Book)</h3>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>Token</th><th>Mechanism</th></tr>
+  <tr><td><strong>Vertex Protocol</strong></td><td>Arbitrum, Mantle, Base</td><td>VRTX</td><td>AMM provides baseline liquidity; order book for active traders; unified cross-margin</td></tr>
+  <tr><td><strong>DODO</strong></td><td>Ethereum, BSC, Arbitrum, Polygon</td><td>DODO</td><td>PMM uses oracle feeds + configurable parameters; mimics order book with AMM structure</td></tr>
+  <tr><td><strong>WOOFi</strong></td><td>Arbitrum, Optimism, BSC, Polygon, others</td><td>WOO</td><td>Synthetic proactive market making (sPMM) fed by Woo Network CeFi liquidity</td></tr>
+  <tr><td><strong>Hashflow</strong></td><td>Ethereum, Arbitrum, Optimism, BSC, Polygon, Avalanche</td><td>HFT</td><td>RFQ-based with professional MMs; zero slippage, MEV-protected</td></tr>
+</table>
+
+<h3 id="s2-agg">2.7 Aggregators</h3>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>Token</th><th>Unique Features</th></tr>
+  <tr><td><strong>1inch</strong></td><td>Ethereum, Arbitrum, Optimism, Polygon, BSC, Base, Avalanche, many</td><td>1INCH</td><td>Pathfinder algorithm; Fusion mode (gasless swaps via resolvers/RFQ); limit orders</td></tr>
+  <tr><td><strong>CoW Protocol / CowSwap</strong></td><td>Ethereum, Arbitrum, Gnosis</td><td>COW</td><td>Batch auction model; Coincidence of Wants; solver competition; full MEV protection</td></tr>
+  <tr><td><strong>Paraswap</strong></td><td>Ethereum, Arbitrum, Optimism, Polygon, BSC, Avalanche</td><td>PSP</td><td>Augustus router; MEV protection; delta (intent-based) orders</td></tr>
+  <tr><td><strong>0x / Matcha</strong></td><td>Ethereum, Arbitrum, Optimism, Polygon, BSC, Base, Avalanche</td><td>ZRX</td><td>0x API powers many wallets; RFQ integration with professional MMs</td></tr>
+  <tr><td><strong>KyberSwap</strong></td><td>Ethereum, Arbitrum, Optimism, Polygon, BSC, Base, Avalanche, many</td><td>KNC</td><td>Dynamic trade routing; elastic pools (CL); aggregation across 100+ sources</td></tr>
+  <tr><td><strong>Odos</strong></td><td>Ethereum, Arbitrum, Optimism, Polygon, BSC, Base, Avalanche, many</td><td>ODOS</td><td>Multi-token input routing (swap multiple tokens in one tx)</td></tr>
+  <tr><td><strong>Bebop</strong></td><td>Ethereum, Arbitrum, Polygon, BSC, Base, Optimism, Blast</td><td>&mdash;</td><td>RFQ-based; batch/multi-token swaps in one signature; gasless</td></tr>
+  <tr><td><strong>LI.FI / Jumper</strong></td><td>Cross-chain (all major EVM)</td><td>&mdash;</td><td>Bridge + DEX aggregation; cross-chain swap routing</td></tr>
+</table>
+
+<h3 id="s2-perp">2.8 Perpetual DEXes</h3>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>TVL/Volume</th><th>Token</th><th>Model</th></tr>
+  <tr><td><strong>GMX V1/V2</strong></td><td>Arbitrum, Avalanche</td><td>~$500M+ (V1), ~$300M+ (V2) TVL</td><td>GMX</td><td>GLP/GM pool model &mdash; LPs are counterparty; oracle-priced</td></tr>
+  <tr><td><strong>Hyperliquid</strong></td><td>Own L1 (EVM-compatible)</td><td>$1B+ daily vol</td><td>HYPE</td><td>Full order book; highest-volume perp DEX by 2025</td></tr>
+  <tr><td><strong>Synthetix V2/V3</strong></td><td>Ethereum, Optimism, Base</td><td>~$200M+ TVL</td><td>SNX</td><td>Synthetic assets; SNX stakers as counterparty; V3 modular liquidity layer</td></tr>
+  <tr><td><strong>Gains Network</strong></td><td>Arbitrum, Polygon</td><td>~$50M+ TVL</td><td>GNS</td><td>Synthetic leverage; gDAI vault; forex, stocks, crypto; up to 150x</td></tr>
+  <tr><td><strong>Aevo</strong></td><td>Own rollup (OP Stack)</td><td>High volume</td><td>AEVO</td><td>Options + perps; order book on custom rollup</td></tr>
+  <tr><td><strong>Perpetual Protocol</strong></td><td>Optimism</td><td>~$10M+ TVL</td><td>PERP</td><td>vAMM model; V2 uses Uniswap V3 as execution layer</td></tr>
+</table>
+
+<h3 id="s2-rfq">2.9 RFQ / Intent-Based / Solver Networks</h3>
+
+<p>Users sign off-chain "intents" and solvers compete to fill them. The fastest-growing DEX paradigm heading into 2026.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain(s)</th><th>Token</th><th>Mechanism</th></tr>
+  <tr><td><strong>CoW Protocol</strong></td><td>Ethereum, Arbitrum, Gnosis</td><td>COW</td><td>Batch auctions; Coincidence of Wants; solver competition; full MEV protection</td></tr>
+  <tr><td><strong>UniswapX</strong></td><td>Ethereum, Arbitrum, expanding</td><td>UNI</td><td>Dutch auction for order filling; fillers compete; cross-chain in development</td></tr>
+  <tr><td><strong>1inch Fusion</strong></td><td>Ethereum, Arbitrum, Polygon, BSC, others</td><td>1INCH</td><td>Resolvers fill gasless orders; Dutch auction decay; multiple resolver competition</td></tr>
+  <tr><td><strong>Across Protocol</strong></td><td>Cross-chain EVM</td><td>ACX</td><td>Intent-based cross-chain execution; relayers front capital</td></tr>
+  <tr><td><strong>DLN (deBridge)</strong></td><td>Cross-chain EVM + Solana</td><td>DBR</td><td>Intent-based cross-chain swaps; makers fill on destination chain</td></tr>
+</table>
+
+<p><strong>Scale (Jan 2025):</strong> Top 3 intent solutions (CoW Swap, UniswapX, 1inch Fusion) exceeded $10.5B in monthly volume &mdash; ~12% of total Ethereum DEX volume.</p>
+
+<h3 id="s2-ve33">2.10 ve(3,3) / Solidly Forks</h3>
+
+<p>Combine Curve's vote-escrowed (ve) tokenomics with Olympus DAO's (3,3) game theory. veToken holders vote on gauge emissions, directing incentives. Protocols bribe veToken holders to attract liquidity.</p>
+
+<table>
+  <tr><th>Name</th><th>Chain</th><th>TVL (Approx.)</th><th>Token</th></tr>
+  <tr><td><strong>Aerodrome</strong></td><td>Base</td><td>~$500M&ndash;1B+</td><td>AERO</td></tr>
+  <tr><td><strong>Velodrome V2</strong></td><td>Optimism</td><td>~$100&ndash;300M+</td><td>VELO</td></tr>
+  <tr><td><strong>Thena</strong></td><td>BSC</td><td>~$50M+</td><td>THE</td></tr>
+  <tr><td><strong>Ramses Exchange</strong></td><td>Arbitrum</td><td>~$20M+</td><td>RAM</td></tr>
+  <tr><td><strong>Lynex</strong></td><td>Linea</td><td>Growing</td><td>LYNX</td></tr>
+  <tr><td><strong>Shadow Exchange</strong></td><td>Sonic</td><td>Growing</td><td>SHADOW</td></tr>
+  <tr><td><strong>Fenix Finance</strong></td><td>Blast</td><td>Growing</td><td>FNX</td></tr>
+  <tr><td><strong>Pearl</strong></td><td>Polygon</td><td>Modest</td><td>PEARL</td></tr>
+</table>
+
+<p><strong>How it works:</strong> Token holders lock for veTokens (vote-escrowed NFTs). veToken holders vote weekly on pool emissions. Protocols bribe veToken holders for liquidity. Flywheel: bribes &rarr; votes &rarr; emissions &rarr; LPs &rarr; liquidity &rarr; fees &rarr; bribe value increases. ve(3,3) has become the standard model for new L2 chain liquidity bootstrapping.</p>
+
+<h3 id="s2-emerging">2.11 Emerging Categories (2025&ndash;2026)</h3>
+
+<h4>Hook-Based / Modular AMMs</h4>
+<ul>
+  <li><strong>Uniswap V4</strong> &mdash; Hooks for custom logic (dynamic fees, TWAMM, limit orders, oracle integration). Singleton contract reduces gas.</li>
+  <li><strong>Balancer V3</strong> &mdash; Similar hooks concept for weighted and stable pools.</li>
+  <li><strong>Bunni V2</strong> &mdash; Built on V4 hooks; automated "shapeshifting" liquidity distributions.</li>
+</ul>
+
+<h4>LVR/MEV-Aware AMMs</h4>
+<ul>
+  <li><strong>Bunni V2</strong> &mdash; "Surge" dynamic fees increase during high-volatility/arbitrage periods.</li>
+  <li><strong>Sorella Labs (Angstrom)</strong> &mdash; Uniswap V4 hook that batches trades to eliminate LVR.</li>
+  <li><strong>Ambient Finance</strong> &mdash; Knockout liquidity and flexible fee tiers.</li>
+</ul>
+
+<h4>Active Liquidity Management (ALM)</h4>
+<ul>
+  <li><strong>Arrakis Finance (PALM)</strong> &mdash; Manages Uni V3/V4 positions; protocol-owned liquidity.</li>
+  <li><strong>Gamma Strategies</strong> &mdash; Automated CL management across many DEXes.</li>
+  <li><strong>Merkl</strong> (Angle) &mdash; Incentive distribution for CL positions.</li>
+</ul>
+
+<h4>Cross-Chain / Omnichain DEXes</h4>
+<ul>
+  <li><strong>Stargate</strong> (LayerZero) &mdash; Omnichain stableswap bridging. Token: STG.</li>
+  <li><strong>THORChain</strong> &mdash; Native cross-chain swaps. Token: RUNE.</li>
+  <li><strong>Chainflip</strong> &mdash; Native cross-chain AMM (BTC, ETH, DOT). Token: FLIP.</li>
+</ul>
+
+<h3 id="s2-summary">2.12 EVM Summary Table</h3>
+
+<table>
+  <tr><th>Category</th><th>Key Mechanism</th><th>Capital Efficiency</th><th>Leading Example</th><th>Trend Direction</th></tr>
+  <tr><td>AMM v2</td><td>x*y=k</td><td>Low</td><td>Uniswap V2</td><td>Declining (legacy)</td></tr>
+  <tr><td>AMM v3 (CL)</td><td>Concentrated ticks</td><td>High</td><td>Uniswap V3/V4</td><td>Dominant for spot</td></tr>
+  <tr><td>Weighted Pools</td><td>Multi-asset weighted</td><td>Medium</td><td>Balancer</td><td>Niche but stable</td></tr>
+  <tr><td>Stable Swaps</td><td>StableSwap invariant</td><td>Very High (pegged)</td><td>Curve</td><td>Stable; ve-wars</td></tr>
+  <tr><td>CLOB</td><td>Order book</td><td>Very High</td><td>Vertex</td><td>Growing on L2s</td></tr>
+  <tr><td>Hybrid</td><td>AMM + book</td><td>High</td><td>DODO, Vertex</td><td>Growing</td></tr>
+  <tr><td>Aggregators</td><td>Multi-source routing</td><td>N/A (meta-layer)</td><td>1inch, CoW</td><td>Essential infrastructure</td></tr>
+  <tr><td>Perp DEXes</td><td>Synthetic leverage</td><td>N/A</td><td>GMX, Hyperliquid</td><td>Massive growth</td></tr>
+  <tr><td>RFQ / Intent</td><td>Solver competition</td><td>Very High</td><td>CoW, UniswapX</td><td>Fastest growing</td></tr>
+  <tr><td>ve(3,3)</td><td>Vote-escrow + bribes</td><td>Medium&ndash;High</td><td>Aerodrome, Velodrome</td><td>Dominant on new L2s</td></tr>
+  <tr><td>Hook-based</td><td>Modular AMM plugins</td><td>Variable</td><td>Uniswap V4</td><td>The future of AMMs</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<!-- PART 3: INNOVATIONS 2026 -->
+<!-- ============================================================ -->
+<div class="part-header" id="part3">
+  <h2>Part 3: DEX Innovations &amp; New Mechanisms 2026</h2>
+</div>
+
+<h3 id="s3-intent">3.1 Intent-Based Trading</h3>
+
+<p>
+  Intent-based trading has matured from concept to dominant paradigm. Users broadcast high-level "intents" (e.g., "swap 100 ETH for optimal USDC") and off-chain solver networks compete to find the best execution path. This separates the "what" from the "how."
+</p>
+<p>
+  As of January 2025, the top three intent solutions (<strong>CoW Swap, UniswapX, 1inch Fusion</strong>) exceeded <strong>$10.5 billion in monthly volume</strong>, roughly 12% of total Ethereum DEX volume. By early 2026, intent-based architecture has become the standard execution model for sophisticated traders.
+</p>
+
+<h3 id="s3-hooks">3.2 Uniswap V4 Hooks &mdash; Redefining DEX Design</h3>
+
+<p>
+  Uniswap V4 launched on mainnet <strong>January 31, 2025</strong>, with three core innovations:
+</p>
+<ul>
+  <li><strong>Hooks:</strong> External smart contracts attached to individual pools, intercepting execution before/after swaps, LP actions, or donations. Every pool can have one hook, but a single hook can serve infinite pools. Developers have built limit orders, dynamic fee adjusters, TWAP executors, and LP incentive mechanisms as hooks.</li>
+  <li><strong>Singleton Contract Architecture:</strong> All pools in a single contract, reducing pool creation gas by 99% and swap gas by ~30%.</li>
+  <li><strong>Flash Accounting:</strong> Internal balance tracking reduces redundant token transfers.</li>
+</ul>
+<p>
+  As of early 2026: <strong>4,689 tracked V4 pools</strong> with an average APY of <strong>56.43%</strong>. The hook ecosystem has made Uniswap a DEX "operating system" rather than just an exchange.
+</p>
+
+<h3 id="s3-cl">3.3 New Concentrated Liquidity Approaches</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Innovation</th><th>Key Data</th></tr>
+  <tr>
+    <td><strong>Maverick V2</strong></td>
+    <td>Directional liquidity positioning; swap fees slashed by 40%.</td>
+    <td>$70B+ cumulative volume by March 2026.</td>
+  </tr>
+  <tr>
+    <td><strong>Ambient Finance</strong></td>
+    <td>Combines concentrated + ambient (full-range) constant-product liquidity in a single pool.</td>
+    <td>Deployed on Ethereum, Scroll, Blast, Canto. No token yet; XP points system active.</td>
+  </tr>
+  <tr>
+    <td><strong>Trader Joe V2.1 (Liquidity Book)</strong></td>
+    <td>Discrete "bins" with improved deposit efficiency. Building "Bid Barn" CLOB (Joe V4).</td>
+    <td>Signals convergence of AMM and order book models.</td>
+  </tr>
+  <tr>
+    <td><strong>Meteora DLMM</strong></td>
+    <td>Zero-slippage bins; dynamic fees (0.01%&ndash;2%); dual yield via lending idle capital.</td>
+    <td>APYs 20&ndash;100%+. Outperforms Uni V3 CL in certain conditions.</td>
+  </tr>
+</table>
+
+<h3 id="s3-mev">3.4 MEV-Protected DEXes</h3>
+
+<h4>CoW Protocol</h4>
+<p>
+  Collects orders over ~30-second intervals, processes as batch auctions, enables peer-to-peer matching (Coincidence of Wants). In <strong>July 2025</strong>, CoW set an all-time high exceeding <strong>$9 billion in monthly volume</strong>. Fair Combinatorial Batch Auctions (FCBAs), launched July 2025, enable simultaneous multi-trade matching with 15&ndash;20% gas savings. Q1 2026: expanding MEV protection to Cosmos and Solana with 40% faster cross-chain settlement.
+</p>
+
+<h4>MEV Blocker</h4>
+<p>
+  RPC endpoint by CoW DAO that hides transactions from the public mempool. Searchers cannot frontrun or sandwich but can backrun, with <strong>90% of captured value returned to users</strong> as rebates.
+</p>
+
+<h4>Aave Integration</h4>
+<p>Aave Labs now powers all swap features on Aave.com through CoW Protocol's MEV-protected solver network, including intent-based flash loans.</p>
+
+<h3 id="s3-cross">3.5 Cross-Chain DEXes</h3>
+
+<table>
+  <tr><th>Protocol</th><th>Mechanism</th><th>2026 Status</th></tr>
+  <tr>
+    <td><strong>THORChain</strong></td>
+    <td>Native cross-chain swaps without wrapped tokens or bridges.</td>
+    <td>Dedicated swap interface in public beta; full release Q1 2026.</td>
+  </tr>
+  <tr>
+    <td><strong>deBridge</strong></td>
+    <td>Fully decentralized cross-chain messaging: swaps, limit orders, NFT transfers.</td>
+    <td>30+ security audits, $200K unclaimed bug bounty. Top cross-chain choice in 2026.</td>
+  </tr>
+  <tr>
+    <td><strong>Squid Router</strong></td>
+    <td>Built on Axelar; supports 79+ chains and 20K+ tokens. Single-tx cross-chain swaps.</td>
+    <td>Multi-protocol hopping connecting entire ecosystems.</td>
+  </tr>
+</table>
+
+<p><strong>Key stat:</strong> As of 2025, over 28% of all DEX trades were cross-chain, marking interoperability as an operational standard.</p>
+
+<h3 id="s3-ai">3.6 AI-Powered DEXes &amp; Market Makers</h3>
+
+<ul>
+  <li><strong>AI routing algorithms</strong> analyze liquidity across multiple pools, chains, and DEXes in real-time, optimizing for price impact, slippage, and execution speed.</li>
+  <li><strong>Autonomous trading agents</strong> interact directly with smart contracts and liquidity pools, executing strategies without human intervention.</li>
+  <li><strong>AI-driven LP management</strong> dynamically adjusts positions based on volatility predictions, reducing impermanent loss.</li>
+  <li>AI agents work through <strong>intents</strong>, representing a shift from manual DEX selection to automated optimal execution.</li>
+  <li>Bid/ask spreads, liquidity depth, and price discovery are increasingly <strong>AI-mediated</strong>.</li>
+</ul>
+<p>In 2026, AI-powered market makers carry out their role with fewer guesswork and faster feedback loops, relying on live data and smart algorithms to refine liquidity provision while reducing slippage and inconsistent pricing.</p>
+
+<h3 id="s3-trends">3.7 Additional 2026 Trends</h3>
+
+<ul>
+  <li><strong>DEX Aggregators as Execution Layers:</strong> Platforms like CoW Swap, Matcha, and OpenOcean abstract protocol differences, protecting users from MEV and enabling smarter trades across dozens of liquidity sources.</li>
+  <li><strong>Protocol-Owned Liquidity (POL):</strong> DEXes reduce reliance on mercenary liquidity farmers by acquiring their own LP positions through bonding mechanisms and treasury management.</li>
+  <li><strong>Dynamic Fee Models:</strong> Fees adjust automatically based on volatility and trading activity (Meteora, Bunni V2).</li>
+  <li><strong>Regulatory Compliance Layers:</strong> Zero-knowledge identity proofs and optional KYC modes allow compliance without sacrificing decentralization.</li>
+  <li><strong>DEXes as Infrastructure Layers:</strong> No longer just marketplaces &mdash; they coordinate liquidity, intent, identity, and execution across a modular, multi-chain world.</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- PART 4: COMPARISON TABLES -->
+<!-- ============================================================ -->
+<div class="part-header" id="part4">
+  <h2>Part 4: Comparison Tables</h2>
+</div>
+
+<h3 id="s4-arch">4.1 Architecture Comparison: AMM vs CLOB vs DLMM vs Intent-Based</h3>
+
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>AMM (Uni V3/V4)</th>
+    <th>CLOB (dYdX, Vertex)</th>
+    <th>DLMM (Meteora, Joe V2)</th>
+    <th>Intent-Based (CoW, UniswapX)</th>
+  </tr>
+  <tr>
+    <td><strong>Capital Efficiency</strong></td>
+    <td>Medium&ndash;High (concentrated)</td>
+    <td>Highest</td>
+    <td>High (zero-slippage bins)</td>
+    <td>Variable (solver-dependent)</td>
+  </tr>
+  <tr>
+    <td><strong>Slippage</strong></td>
+    <td>Variable (range-dependent)</td>
+    <td>Very low for liquid pairs</td>
+    <td>Zero within bins</td>
+    <td>Optimized by solvers</td>
+  </tr>
+  <tr>
+    <td><strong>MEV Protection</strong></td>
+    <td>Low (unless hooks added)</td>
+    <td>Medium</td>
+    <td>Low</td>
+    <td>Highest (batch auctions)</td>
+  </tr>
+  <tr>
+    <td><strong>LP Complexity</strong></td>
+    <td>Medium&ndash;High</td>
+    <td>N/A (makers set orders)</td>
+    <td>High (active management)</td>
+    <td>N/A (solvers handle execution)</td>
+  </tr>
+  <tr>
+    <td><strong>Permissionlessness</strong></td>
+    <td>Highest (any token)</td>
+    <td>Lower (listing required)</td>
+    <td>High</td>
+    <td>High</td>
+  </tr>
+  <tr>
+    <td><strong>Gas Costs</strong></td>
+    <td>Medium (V4: low)</td>
+    <td>Low (L2/off-chain)</td>
+    <td>Low (Solana-native)</td>
+    <td>Low (off-chain matching)</td>
+  </tr>
+  <tr>
+    <td><strong>Best For</strong></td>
+    <td>Long-tail tokens, DeFi composability</td>
+    <td>High-frequency trading, perps</td>
+    <td>Active LPs seeking max yield</td>
+    <td>Retail users wanting best execution</td>
+  </tr>
+  <tr>
+    <td><strong>Example $10M Trade Slippage</strong></td>
+    <td>~1&ndash;5%</td>
+    <td>~0.1%</td>
+    <td>~0.5&ndash;2%</td>
+    <td>~0.2&ndash;1% (solver-optimized)</td>
+  </tr>
+</table>
+
+<h3 id="s4-lp">4.2 LP Returns by DEX Type (2025&ndash;2026 Data)</h3>
+
+<table>
+  <tr><th>DEX Type</th><th>Typical APY Range</th><th>Management Required</th><th>Notes</th></tr>
+  <tr>
+    <td><strong>Meteora DLMM</strong></td>
+    <td>20&ndash;100%+</td>
+    <td>Active (high)</td>
+    <td>Highest potential returns; requires granular bin management</td>
+  </tr>
+  <tr>
+    <td><strong>Uniswap V4 (w/ hooks)</strong></td>
+    <td>~56% average</td>
+    <td>Medium&ndash;Active</td>
+    <td>4,689 tracked pools as of early 2026</td>
+  </tr>
+  <tr>
+    <td><strong>Raydium CLMM</strong></td>
+    <td>15&ndash;60%</td>
+    <td>Active</td>
+    <td>Deep memecoin liquidity on Solana</td>
+  </tr>
+  <tr>
+    <td><strong>Orca Whirlpools</strong></td>
+    <td>15&ndash;50%</td>
+    <td>Active</td>
+    <td>Clean UX, strong SDK</td>
+  </tr>
+  <tr>
+    <td><strong>Meteora Dynamic AMM</strong></td>
+    <td>10&ndash;30%</td>
+    <td>Passive</td>
+    <td>Auto-lends idle capital for dual yield</td>
+  </tr>
+  <tr>
+    <td><strong>Curve (Stablecoins)</strong></td>
+    <td>5&ndash;15%</td>
+    <td>Passive</td>
+    <td>Lowest IL risk; predictable yields</td>
+  </tr>
+  <tr>
+    <td><strong>Uniswap V3 (Active Mgmt)</strong></td>
+    <td>~32% (institutional example)</td>
+    <td>Active</td>
+    <td>Toronto fund: $2M in ETH/USDC achieved 32% annualized (2025)</td>
+  </tr>
+</table>
+
+<h3 id="s4-cap">4.3 Capital Efficiency Ranking</h3>
+
+<table>
+  <tr><th>Rank</th><th>DEX Type</th><th>Efficiency Description</th><th>Key Example</th></tr>
+  <tr>
+    <td>1</td>
+    <td><strong>CLOB (Order Book)</strong></td>
+    <td>Highest for liquid, high-volume pairs. A $10M trade may incur just 0.1% slippage vs 5%+ on constant-product AMMs.</td>
+    <td>dYdX, Vertex, Phoenix</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>DLMM (Bin-Based)</strong></td>
+    <td>Zero-slippage within bins + dynamic fees. Outperforms Uni V3 in volatile conditions.</td>
+    <td>Meteora, Trader Joe V2</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>Concentrated Liquidity (CLAMM)</strong></td>
+    <td>100&ndash;4000x improvement over v2. Tick-based positioning.</td>
+    <td>Uniswap V3/V4, Orca Whirlpools</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><strong>Intent-Based / Solver</strong></td>
+    <td>High effective efficiency through routing &mdash; the entire DeFi ecosystem becomes a single liquidity source.</td>
+    <td>CoW Protocol, UniswapX</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><strong>StableSwap</strong></td>
+    <td>Very high for pegged assets. Flat curve enables millions in swaps with minimal slippage.</td>
+    <td>Curve Finance</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td><strong>Proactive Market Maker (PMM)</strong></td>
+    <td>Oracle-guided concentration around true market price. Reduces LVR.</td>
+    <td>Lifinity, DODO</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td><strong>Constant Product (v2)</strong></td>
+    <td>Lowest. Liquidity spread across 0 to infinity.</td>
+    <td>Uniswap V2, SushiSwap</td>
+  </tr>
+</table>
+
+<!-- FOOTER -->
+<footer>
+  <p>DEX Landscape Report &mdash; Solana &amp; EVM &mdash; April 16, 2026</p>
+  <p>Research compiled from multi-agent analysis with web-sourced 2025&ndash;2026 data.</p>
+</footer>
+
+</div><!-- .container -->
+</body>
+</html>

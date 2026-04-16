@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Builder Dashboard</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #0a0a0a; --card: #141414; --border: #222; --accent: #C15F3C; --green: #22c55e; --yellow: #eab308; --red: #ef4444; --blue: #3b82f6; --dim: rgba(255,255,255,0.4); --text: rgba(255,255,255,0.9); }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', sans-serif; padding: 20px; max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  .subtitle { color: var(--dim); font-size: 14px; margin-bottom: 30px; }
+  .stats { display: flex; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; flex: 1; min-width: 120px; }
+  .stat-num { font-size: 28px; font-weight: 700; }
+  .stat-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--dim); cursor: pointer; font-size: 13px; transition: all 0.2s; }
+  .filter.active, .filter:hover { border-color: var(--accent); color: var(--text); background: rgba(193,95,60,0.1); }
+  .project { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; transition: border-color 0.2s; }
+  .project:hover { border-color: #333; }
+  .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .project-name { font-size: 17px; font-weight: 600; }
+  .badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .badge-shipped { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-built { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .badge-idea { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .badge-paused { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-active { background: rgba(193,95,60,0.15); color: var(--accent); }
+  .project-desc { color: var(--dim); font-size: 13px; margin-bottom: 10px; line-height: 1.5; }
+  .project-meta { display: flex; gap: 16px; font-size: 12px; color: var(--dim); flex-wrap: wrap; }
+  .project-meta span { display: flex; align-items: center; gap: 4px; }
+  .tag { background: #1a1a1a; padding: 2px 8px; border-radius: 6px; font-size: 11px; }
+  .links { margin-top: 10px; display: flex; gap: 10px; }
+  .links a { color: var(--accent); text-decoration: none; font-size: 13px; }
+  .links a:hover { text-decoration: underline; }
+  .section-title { font-size: 13px; color: var(--dim); text-transform: uppercase; letter-spacing: 1.5px; margin: 30px 0 12px; }
+  @media (max-width: 600px) { body { padding: 14px; } .stat { min-width: 80px; padding: 10px 14px; } .stat-num { font-size: 22px; } }
+</style>
+</head>
+<body>
+
+<h1>Builder Dashboard</h1>
+<p class="subtitle">Track what's shipped, what's built, and what's next.</p>
+
+<div class="stats" id="stats"></div>
+<div class="filters" id="filters"></div>
+<div id="projects"></div>
+
+<script>
+const projects = [
+  {
+    name: "pRune",
+    status: "shipped",
+    desc: "Private Rune transfers on Bitcoin using Groth16 ZK proofs. All 6 sprints complete. 75 tests passing.",
+    tags: ["rust", "bitcoin", "zk-proofs", "privacy"],
+    date: "2026-04-09",
+    repo: "https://github.com/homelanderlovecoding/ord",
+    url: null,
+    notes: "Trust issue: federation multisig + Groth16 trusted setup hard to sell. Tech is solid but product-market fit unclear."
+  },
+  {
+    name: "Pulse Button",
+    status: "shipped",
+    desc: "Physical button for AI coding agents. Phone-based web simulator live. Tap to approve, glow to show status.",
+    tags: ["hardware", "web", "claude-code", "esp32"],
+    date: "2026-04-16",
+    repo: "https://github.com/homelanderlovecoding/claude-pulse",
+    url: "https://homelanderlovecoding.github.io/claude-pulse",
+    notes: "Shipped as web demo. Hardware version needs ESP32 parts. Daemon + MCP servers built but not deployed."
+  },
+  {
+    name: "Trading Agent",
+    status: "built",
+    desc: "Kronos price prediction + multi-agent debate + Claude brain for Hyperliquid perpetuals. Paper trading ready.",
+    tags: ["python", "ai", "trading", "hyperliquid"],
+    date: "2026-04-16",
+    repo: null,
+    url: null,
+    notes: "Collector + executor built. Need to integrate real TradingAgents repo prompts. Paper test before real money."
+  },
+  {
+    name: "Security MCP",
+    status: "built",
+    desc: "MCP server for AI agent security. Package typosquat detection, secret scanning, dangerous command blocking.",
+    tags: ["mcp", "security", "nodejs"],
+    date: "2026-04-15",
+    repo: null,
+    url: null,
+    notes: "Prototype working. Zero dependencies. Needs polish + npm publish. Weak moat — anyone can clone it."
+  },
+  {
+    name: "Memory MCP",
+    status: "built",
+    desc: "Persistent memory for AI agents across sessions. Save/recall/forget preferences, context, and rules.",
+    tags: ["mcp", "ai", "nodejs"],
+    date: "2026-04-15",
+    repo: null,
+    url: null,
+    notes: "Working prototype. Privacy concern: users scared of data collection. Better as local-only tool."
+  },
+  {
+    name: "Learning MCP",
+    status: "built",
+    desc: "AI agent learns from mistakes. Tracks errors, extracts rules, improves over time.",
+    tags: ["mcp", "ai", "nodejs"],
+    date: "2026-04-15",
+    repo: null,
+    url: null,
+    notes: "Working prototype. Interesting concept but needs real usage data to prove value."
+  },
+  {
+    name: "Polymarket Bot",
+    status: "built",
+    desc: "Rust-based Polymarket scanner. Finds tradeable markets, analyzes with AI, paper trades with Kelly sizing.",
+    tags: ["rust", "trading", "polymarket"],
+    date: "2026-04-08",
+    repo: null,
+    url: null,
+    notes: "Scanner works (34 markets found from live data). No proven edge. 92.4% of wallets lose money."
+  },
+  {
+    name: "Stealth Runes",
+    status: "idea",
+    desc: "BIP-352 silent payments applied to Rune transfers. Trustless recipient privacy. No ZK needed.",
+    tags: ["bitcoin", "privacy", "runes"],
+    date: "2026-04-14",
+    repo: null,
+    url: null,
+    notes: "Hides recipient only (not amount/sender). Scanning cost is the main challenge. Maybe not enough privacy to sell."
+  },
+  {
+    name: "Rug Checker",
+    status: "idea",
+    desc: "AI-powered token launch scanner and rug detection. Scores new tokens by deployer history, liquidity, holder distribution.",
+    tags: ["ai", "security", "defi"],
+    date: "2026-04-08",
+    repo: null,
+    url: null,
+    notes: "Real demand. Could be a Telegram bot. Pairs well with Rune analytics."
+  },
+  {
+    name: "CipherKit",
+    status: "idea",
+    desc: "ZK cryptography learning kit for kids. NFC cards + ESP32 device teaches real cryptography through physical puzzles.",
+    tags: ["hardware", "education", "zk-proofs"],
+    date: "2026-04-09",
+    repo: null,
+    url: null,
+    notes: "$7.94B STEM toy market. Zero competitors in real ZK education. Good project with daughter."
+  },
+  {
+    name: "Vibe Code Tester",
+    status: "idea",
+    desc: "AI agent that uses your app like a real user and gives UX feedback. Playwright + Claude vision.",
+    tags: ["ai", "ux", "testing"],
+    date: "2026-04-09",
+    repo: null,
+    url: null,
+    notes: "Gap exists but competitive space. Uxia and UserTesting are adjacent."
+  },
+  {
+    name: "Rune Analytics",
+    status: "idea",
+    desc: "Nansen for Runes. Whale tracking, new etchings, volume trends, holder distribution dashboard.",
+    tags: ["bitcoin", "analytics", "runes"],
+    date: "2026-04-09",
+    repo: null,
+    url: null,
+    notes: "Nobody doing Rune-specific analytics. Reuses ord indexer skills. $50-100/month SaaS potential."
+  },
+  {
+    name: "Nava Competitor",
+    status: "idea",
+    desc: "Transaction verification for AI agents on Bitcoin/Runes. Non-custodial, MCP-native alternative to Nava.",
+    tags: ["mcp", "security", "bitcoin"],
+    date: "2026-04-16",
+    repo: null,
+    url: null,
+    notes: "Nava raised $8.3M for EVM. Nobody doing this for Bitcoin. But hard to compete on data moat."
+  },
+];
+
+// Render
+const statusOrder = { shipped: 0, active: 1, built: 2, idea: 3, paused: 4 };
+projects.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+
+const counts = { total: projects.length, shipped: 0, built: 0, idea: 0, paused: 0 };
+projects.forEach(p => counts[p.status] = (counts[p.status] || 0) + 1);
+
+document.getElementById("stats").innerHTML = `
+  <div class="stat"><div class="stat-num">${counts.total}</div><div class="stat-label">Total Projects</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--green)">${counts.shipped}</div><div class="stat-label">Shipped</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--blue)">${counts.built}</div><div class="stat-label">Built</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--yellow)">${counts.idea}</div><div class="stat-label">Ideas</div></div>
+`;
+
+const allStatuses = ["all", "shipped", "built", "idea", "paused"];
+let activeFilter = "all";
+
+function renderFilters() {
+  document.getElementById("filters").innerHTML = allStatuses.map(s =>
+    `<button class="filter ${s === activeFilter ? 'active' : ''}" onclick="setFilter('${s}')">${s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}</button>`
+  ).join("");
+}
+
+function setFilter(f) { activeFilter = f; renderFilters(); renderProjects(); }
+
+function renderProjects() {
+  const filtered = activeFilter === "all" ? projects : projects.filter(p => p.status === activeFilter);
+  document.getElementById("projects").innerHTML = filtered.map(p => `
+    <div class="project">
+      <div class="project-header">
+        <span class="project-name">${p.name}</span>
+        <span class="badge badge-${p.status}">${p.status}</span>
+      </div>
+      <div class="project-desc">${p.desc}</div>
+      <div class="project-meta">
+        ${p.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+        <span>${p.date}</span>
+      </div>
+      ${p.notes ? `<div class="project-desc" style="margin-top:8px;font-style:italic;font-size:12px;">Note: ${p.notes}</div>` : ''}
+      ${(p.repo || p.url) ? `<div class="links">
+        ${p.repo ? `<a href="${p.repo}" target="_blank">GitHub</a>` : ''}
+        ${p.url ? `<a href="${p.url}" target="_blank">Live</a>` : ''}
+      </div>` : ''}
+    </div>
+  `).join("");
+}
+
+renderFilters();
+renderProjects();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+[package]
+name = "pulse-firmware"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+esp-idf-svc = { version = "0.51", features = ["binstart", "alloc"] }
+esp-idf-hal = "0.46"
+smart-leds = "0.4"
+ws2812-esp32-rmt-driver = "0.10"
+log = "0.4"
+esp-idf-sys = { version = "0.36", features = ["binstart"] }
+
+[build-dependencies]
+embuild = "0.33"

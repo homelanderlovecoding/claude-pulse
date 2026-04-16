@@ -1,0 +1,11 @@
+{
+  "name": "pulse-mcp",
+  "version": "1.0.0",
+  "description": "Pulse MCP servers for Claude Code: memory, learning, and security",
+  "scripts": {
+    "memory": "node memory-server.js",
+    "learning": "node learning-server.js",
+    "security": "node security-server.js"
+  },
+  "dependencies": {}
+}

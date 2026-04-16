@@ -821,11 +821,14 @@
     tapCount = 0;
   }
 
+  let prevState = "idle";
+
   function onPointerDown(e) {
     e.preventDefault();
     btn.classList.add("pressed");
     longFired = false;
     pressStart = Date.now();
+    prevState = currentState;
 
     pressTimer = setTimeout(() => {
       longFired = true;
@@ -840,7 +843,10 @@
     btn.classList.remove("pressed");
     clearTimeout(pressTimer);
 
-    if (longFired) return;
+    if (longFired) {
+      setState(prevState);
+      return;
+    }
 
     const elapsed = Date.now() - pressStart;
     if (elapsed >= LONG_MS) return;
